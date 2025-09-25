@@ -18,7 +18,10 @@ cp .env.example .env
 Required values:
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`: OAuth credentials with Gmail and Calendar scopes.
 - `NEXT_PUBLIC_BASE_URL`: Base URL that Google redirects back to (e.g. `http://localhost:3000`).
-- `OPENAI_API_KEY`: Key with access to the `gpt-4o-mini` model.
+- `AZURE_OPENAI_ENDPOINT`: Base URL of your Azure OpenAI resource (e.g. `https://example-openai.openai.azure.com`).
+- `AZURE_OPENAI_API_KEY`: Azure OpenAI API key.
+- `AZURE_OPENAI_DEPLOYMENT`: Name of the chat completion deployment (e.g. a `gpt-4o-mini` deployment).
+- `AZURE_OPENAI_API_VERSION` (optional): Overrides the default `2024-02-15-preview` API version.
 
 ## Development
 ```

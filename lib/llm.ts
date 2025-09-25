@@ -17,8 +17,6 @@ function getEnv(name: string): string {
 
 export async function analyzeEmail(subject: string, body: string): Promise<AiAnalysis> {
   const payload = {
-    model: 'gpt-4o-mini',
-    response_format: { type: 'json_object' },
     messages: [
       {
         role: 'system',
@@ -28,16 +26,25 @@ export async function analyzeEmail(subject: string, body: string): Promise<AiAna
         role: 'user',
         content: `Subject: ${subject}\nBody:\n${body}`
       }
-    ]
+    ],
+    response_format: { type: 'json_object' }
   };
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  const apiVersion = process.env.AZURE_OPENAI_API_VERSION ?? '2024-02-15-preview';
+  const endpoint = getEnv('AZURE_OPENAI_ENDPOINT').replace(/\/$/, '');
+  const deployment = getEnv('AZURE_OPENAI_DEPLOYMENT');
+  const url = `${endpoint}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
+
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getEnv('OPENAI_API_KEY')}`
+      'api-key': getEnv('AZURE_OPENAI_API_KEY')
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify({
+      ...payload,
+      model: deployment
+    })
   });
 
   if (!response.ok) {
